@@ -1,30 +1,35 @@
-import XCTest
 import FeatherIDCoding
+import Testing
 
-final class FeatherDecoderTests: XCTestCase {
+@Suite struct FeatherDecoderTests {
 
     private let decoder = FeatherDecoder()
 
-    func testDecode() throws {
-        XCTAssertEqual(try decoder.decode(id: "0~"), 0)
-        XCTAssertEqual(try decoder.decode(id: "1~"), 1)
-        XCTAssertEqual(try decoder.decode(id: "9~"), 9)
-        XCTAssertEqual(try decoder.decode(id: "A~"), 10)
-        XCTAssertEqual(try decoder.decode(id: "KKXAd"), 5719739598897152)
-        XCTAssertEqual(try decoder.decode(id: "LVhth"), 6050328667488256)
-        XCTAssertEqual(try decoder.decode(id: "KcvxJ"), 5800605981343744)
-        XCTAssertEqual(try decoder.decode(id: "MCe8l"), 6247984203300864)
-        XCTAssertEqual(try decoder.decode(id: "IOylV"), 5176276851621888)
-        XCTAssertEqual(try decoder.decode(id: "K93Fh"), 5669304938790912)
-        XCTAssertEqual(try decoder.decode(id: "Iui03"), 5315863892721664)
-        XCTAssertEqual(try decoder.decode(id: "Iui00"), 5315863842390016)
-        XCTAssertEqual(try decoder.decode(id: "K9-Fh"), 5673428107395072)
-        XCTAssertEqual(try decoder.decode(id: "K_-Fh"), 5906524572483584)
-        XCTAssertEqual(try decoder.decode(id: "G9fTeW000~"), 4546031362506752)
-        XCTAssertEqual(try decoder.decode(id: "G9fTeW0."), 4546031362506752)
+    @Test(arguments: [
+        ("0~", 0),
+        ("1~", 1),
+        ("9~", 9),
+        ("A~", 10),
+        ("KKXAd", 5_719_739_598_897_152),
+        ("LVhth", 6_050_328_667_488_256),
+        ("KcvxJ", 5_800_605_981_343_744),
+        ("MCe8l", 6_247_984_203_300_864),
+        ("IOylV", 5_176_276_851_621_888),
+        ("K93Fh", 5_669_304_938_790_912),
+        ("Iui03", 5_315_863_892_721_664),
+        ("Iui00", 5_315_863_842_390_016),
+        ("K9-Fh", 5_673_428_107_395_072),
+        ("K_-Fh", 5_906_524_572_483_584),
+        ("G9fTeW000~", 4_546_031_362_506_752),
+        ("G9fTeW0.", 4_546_031_362_506_752),
+    ])
+    func decode(id: String, expected: Int64) throws {
+        #expect(try decoder.decode(id: id) == expected)
     }
 
-    func testDecodeInvalidCharacter() {
-        XCTAssertThrowsError(try decoder.decode(id: "KKXAå"))
+    @Test func decodeInvalidCharacter() throws {
+        #expect(throws: (any Error).self) {
+            try decoder.decode(id: "KKXAå")
+        }
     }
 }

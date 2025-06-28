@@ -1,29 +1,33 @@
-import XCTest
 import FeatherIDCoding
+import Testing
 
-final class FeatherEncoderTests: XCTestCase {
+@Suite struct FeatherEncoderTests {
 
     private let encoder = FeatherEncoder()
 
-    func testEncode() throws {
-        XCTAssertEqual(try encoder.encode(id: 0), "0~")
-        XCTAssertEqual(try encoder.encode(id: 1), "1~")
-        XCTAssertEqual(try encoder.encode(id: 9), "9~")
-        XCTAssertEqual(try encoder.encode(id: 10), "A~")
-        XCTAssertEqual(try encoder.encode(id: 5719739598897152), "KKXAd")
-        XCTAssertEqual(try encoder.encode(id: 6050328667488256), "LVhth")
-        XCTAssertEqual(try encoder.encode(id: 5800605981343744), "KcvxJ")
-        XCTAssertEqual(try encoder.encode(id: 6247984203300864), "MCe8l")
-        XCTAssertEqual(try encoder.encode(id: 5176276851621888), "IOylV")
-        XCTAssertEqual(try encoder.encode(id: 5669304938790912), "K93Fh")
-        XCTAssertEqual(try encoder.encode(id: 5315863892721664), "Iui03")
-        XCTAssertEqual(try encoder.encode(id: 5315863842390016), "Iui00")
-        XCTAssertEqual(try encoder.encode(id: 5673428107395072), "K9-Fh")
-        XCTAssertEqual(try encoder.encode(id: 5906524572483584), "K_-Fh")
-        XCTAssertEqual(try encoder.encode(id: 4546031362506752), "G9fTeW0.")
+    @Test(arguments: [
+        (0, "0~"),
+        (1, "1~"),
+        (9, "9~"),
+        (10, "A~"),
+        (5_719_739_598_897_152, "KKXAd"),
+        (6_050_328_667_488_256, "LVhth"),
+        (5_800_605_981_343_744, "KcvxJ"),
+        (6_247_984_203_300_864, "MCe8l"),
+        (5_176_276_851_621_888, "IOylV"),
+        (5_669_304_938_790_912, "K93Fh"),
+        (5_315_863_892_721_664, "Iui03"),
+        (5_315_863_842_390_016, "Iui00"),
+        (5_673_428_107_395_072, "K9-Fh"),
+        (5_906_524_572_483_584, "K_-Fh"),
+        (4_546_031_362_506_752, "G9fTeW0."),
+    ]) func encode(id: Int64, expected: String) throws {
+        #expect(try encoder.encode(id: id) == expected)
     }
 
-    func testEncodeInvalidNegative() {
-        XCTAssertThrowsError(try encoder.encode(id: -1))
+    @Test func encodeInvalidNegative() throws {
+        #expect(throws: (any Error).self) {
+            try encoder.encode(id: Int64(-1))
+        }
     }
 }
