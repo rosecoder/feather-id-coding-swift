@@ -4,6 +4,7 @@ public struct FeatherDecoder {
 
     public enum DecodingError: Error {
         case unexpectedCharacter(Character)
+        case overflow
     }
 
     public func decode(id: String) throws -> Int64 {
@@ -22,7 +23,15 @@ public struct FeatherDecoder {
             guard let index = rixits.firstIndex(of: character) else {
                 throw DecodingError.unexpectedCharacter(character)
             }
-            result = result * 64 + Int64(index)
+            let newResult = result.multipliedReportingOverflow(by: 64)
+            guard !newResult.overflow else {
+                throw DecodingError.overflow
+            }
+            let finalResult = newResult.partialValue.addingReportingOverflow(Int64(index))
+            guard !finalResult.overflow else {
+                throw DecodingError.overflow
+            }
+            result = finalResult.partialValue
         }
         return result
     }

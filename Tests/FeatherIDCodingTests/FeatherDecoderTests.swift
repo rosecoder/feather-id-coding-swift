@@ -27,9 +27,9 @@ import Testing
         #expect(try decoder.decode(id: id) == expected)
     }
 
-    @Test func decodeInvalidCharacter() throws {
+    @Test(arguments: ["KKXAå", "IjVNIe0"]) func decodeInvalid(id: String) throws {
         #expect(throws: (any Error).self) {
-            try decoder.decode(id: "KKXAå")
+            try decoder.decode(id: id)
         }
     }
 }
